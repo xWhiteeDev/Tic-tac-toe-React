@@ -112,7 +112,7 @@ function App() {
           <MyButton
             onclick={resetGame}
             type="NORMAL"
-            text={"Let's start from the beginning!"}
+            text={"Let's start from begin!"}
           />
         </>
       )}
