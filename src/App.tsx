@@ -4,7 +4,7 @@ import Plain from "./components/Plain";
 import type { TBoardArray, TMove } from "./types/Game";
 import Text from "./components/Text";
 import MyButton from "./components/Button";
-import List, { type IListMember } from "./components/List";
+import List from "./components/List";
 
 const winingConfiguration: number[][] = [
   [0, 3, 6],
@@ -17,7 +17,7 @@ const winingConfiguration: number[][] = [
   [6, 4, 2],
 ];
 
-function isWin(board: Array<string | null>, move: TMove) {
+function isWin(board: TBoardArray, move: TMove) {
   return winingConfiguration.find((cfg) =>
     cfg.every((v) => board[v] === move),
   );
@@ -33,7 +33,7 @@ function App() {
   const [winCombo, setWinCombo] = useState<number[]>();
   const [history, setHistory] = useState<TBoardArray[]>([]);
 
-  function updateBoard(board: Array<string | null>, index: number) {
+  function updateBoard(board:TBoardArray, index: number) {
     const newBoard = [...board];
     newBoard[index] = move;
     setBoard(newBoard);
