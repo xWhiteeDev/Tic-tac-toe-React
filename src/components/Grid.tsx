@@ -1,12 +1,12 @@
 import MyButton from "./Button";
 import "../styles/Grid.css";
-import type { TMove } from "../types/Game";
+import type { TGameFinish, TMove } from "../types/Game";
 
 interface IGrid {
   move: TMove;
   board: Array<string | null>;
   onClick: (index: number) => void;
-  isFinished: boolean;
+  isFinished: TGameFinish | null;
   winCombination:number[] | undefined;
 }
 
@@ -19,7 +19,7 @@ export default function Grid(props: IGrid) {
             text={`${props.board[key] ?? ""}`}
             onclick={() => props.onClick(key)}
             key={`${key}`}
-            disabled={props.isFinished}
+            disabled={!!props.isFinished}
             type="GAME"
             isWinner={props.winCombination?.includes(key) ?? false}
 

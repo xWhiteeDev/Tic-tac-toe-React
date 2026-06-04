@@ -1,12 +1,12 @@
 import "../styles/Plain.css";
 import Grid from "./Grid";
-import type { TMove } from "../types/Game";
+import type { TGameFinish, TMove } from "../types/Game";
 
 interface IPlain {
   move:TMove
   board: Array<string | null>;
   onClick: (index: number) => void;
-  isFinished:boolean;
+  isFinished:TGameFinish | null;
   winCombination:number[] | undefined
 }
 

@@ -2,6 +2,8 @@ ul {
     list-style: none;
     padding: 10px;
     text-align: center;
+        transition: 0.35s all linear;
+
 }
 
 
@@ -18,10 +20,8 @@ li:first-child {
     border-bottom: none;
 }
 
-li:last-child {
-}
+
 
 li:hover {
     color: rgba(255, 255, 255, 0.822);
-
 }

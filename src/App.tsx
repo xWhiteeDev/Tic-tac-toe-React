@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import Plain from "./components/Plain";
-import type { TBoardArray, TMove } from "./types/Game";
+import { type TGameFinish, type TBoardArray, type TMove } from "./types/Game";
 import Text from "./components/Text";
 import MyButton from "./components/Button";
 import List from "./components/List";
@@ -17,30 +17,46 @@ const winingConfiguration: number[][] = [
   [6, 4, 2],
 ];
 
-function isWin(board: TBoardArray, move: TMove) {
-  return winingConfiguration.find((cfg) =>
-    cfg.every((v) => board[v] === move),
-  );
+function checkWinnerConfiguration(
+  board: TBoardArray,
+  move: TMove,
+): number[] | undefined {
+  return winingConfiguration.find((cfg) => cfg.every((v) => board[v] === move));
 }
 
 function isEven(num: number): boolean {
   return num % 2 === 0;
 }
+
+function getGameEndMessage(
+  finishedGameType: TGameFinish,
+  move?: TMove,
+): string {
+  const messages: Record<TGameFinish, string> = {
+    DRAW: "Draw!! It was really great game for you",
+    WIN: `Game finished! Huge congratulations for: ${move}`,
+  };
+  return messages[finishedGameType];
+}
+
 function App() {
   const [board, setBoard] = useState<TBoardArray>(Array(9).fill(null));
   const [move, setMove] = useState<TMove>("X");
-  const [isFinished, setGameFinished] = useState(false);
+  const [isFinished, setGameFinished] = useState<TGameFinish | null>(null);
   const [winCombo, setWinCombo] = useState<number[]>();
   const [history, setHistory] = useState<TBoardArray[]>([]);
 
-  function updateBoard(board:TBoardArray, index: number) {
+  function updateBoard(board: TBoardArray, index: number): TBoardArray {
     const newBoard = [...board];
     newBoard[index] = move;
     setBoard(newBoard);
     return newBoard;
   }
 
-  function updateHistory(history: TBoardArray[], currentBoard: TBoardArray) {
+  function updateHistory(
+    history: TBoardArray[],
+    currentBoard: TBoardArray,
+  ): void {
     setHistory([...history, currentBoard]);
   }
 
@@ -62,61 +78,69 @@ function App() {
     if (isFinished) return;
     if (board[index]) return;
     const newBoard = updateBoard(board, index);
-    const winCombo = isWin(newBoard, move);
-    if (winCombo) {
-      const newCombo = [...winCombo];
-      setGameFinished(true);
+    const winConfig = checkWinnerConfiguration(newBoard, move);
+    if (newBoard.every((el) => el !== null) && !winConfig) {
+      setGameFinished("DRAW");
+      return;
+    }
+    if (winConfig) {
+      const newCombo = [...winConfig];
+      setGameFinished("WIN");
       setWinCombo(newCombo);
       return;
     }
     updateHistory(history, newBoard);
-    setMove(move == "O" ? "X" : "O");
+    setMove(move === "O" ? "X" : "O");
   }
 
   function resetGame() {
     const newBoard = Array(9).fill(null);
     setBoard(newBoard);
     setMove("X");
-    setGameFinished(false);
+    setGameFinished(null);
     setWinCombo(undefined);
     setHistory([]);
   }
   return (
-    <>
-      <Plain
-        move={move}
-        board={board}
-        onClick={onClick}
-        isFinished={isFinished}
-        winCombination={winCombo}
-      />
-      {history.length > 0 && (
-        <List
-          listMembers={history.map((_, i) => {
-            const text =
-              i == 0 ? "Back to start position" : `Back to move ${i}`;
-            return {
-              text,
-              className: `listMember`,
-              key: `lm-${i}`,
-              onClick: () => {
-                goBack(i);
-              },
-            };
-          })}
+    <div className="Game-container">
+      <div className="Game-Plain-Container">
+        <Plain
+          move={move}
+          board={board}
+          onClick={onClick}
+          isFinished={isFinished}
+          winCombination={winCombo}
         />
-      )}
-      {isFinished && (
-        <>
-          <Text text={`Game finished! Huge congratulations for: ${move}`} />
-          <MyButton
-            onclick={resetGame}
-            type="NORMAL"
-            text={"Let's start from begin!"}
+      </div>
+      <div className="Game-subInfo">
+        {history.length > 0 && !isFinished && (
+          <List
+            listMembers={history.map((_, i) => {
+              const text =
+                i === 0 ? "Back to start position" : `Back to move ${i}`;
+              return {
+                text,
+                className: `listMember`,
+                key: `lm-${i}`,
+                onClick: () => {
+                  goBack(i);
+                },
+              };
+            })}
           />
-        </>
-      )}
-    </>
+        )}
+        {isFinished && (
+          <>
+            <Text text={getGameEndMessage(isFinished, move)} />
+            <MyButton
+              onclick={resetGame}
+              type="NORMAL"
+              text={"Let's start from begin!"}
+            />
+          </>
+        )}
+      </div>
+    </div>
   );
 }
 

@@ -1,5 +1,4 @@
 .PlainSquare {
-    background-color: gray;
     width: 12vw;
     aspect-ratio: 1/1;
     transition: 0.5s all linear;
