@@ -1,9 +1,8 @@
 import MyButton from "./Button";
 import "../styles/Grid.css";
-import type { TGameFinish, TMove } from "../types/Game";
+import type { TGameFinish } from "../types/Game";
 
 interface IGrid {
-  move: TMove;
   board: Array<string | null>;
   onClick: (index: number) => void;
   isFinished: TGameFinish | null;

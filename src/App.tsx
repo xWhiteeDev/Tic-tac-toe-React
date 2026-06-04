@@ -105,7 +105,6 @@ function App() {
     <div className="Game-container">
       <div className="Game-Plain-Container">
         <Plain
-          move={move}
           board={board}
           onClick={onClick}
           isFinished={isFinished}

@@ -4,7 +4,7 @@ export interface IListMember {
   text: string;
   className: string;
   key: string;
-  onClick?: (...args: any) => void;
+  onClick?: () => void;
 }
 
 interface IList {

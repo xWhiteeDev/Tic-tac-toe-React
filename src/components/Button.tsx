@@ -4,7 +4,7 @@ type TButtonType = "NORMAL" | "GAME" | "RESET";
 
 export interface IButtonComponent {
   text?: string;
-  onclick?: (...args: any[]) => void;
+  onclick?: () => void;
   key?: string;
   disabled?: boolean;
   type?: TButtonType;
